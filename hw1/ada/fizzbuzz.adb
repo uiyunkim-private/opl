@@ -1,3 +1,6 @@
+-- This code is from Rosettacode.org
+-- http://rosettacode.org/wiki/FizzBuzz
+
 with Ada.Text_IO; use Ada.Text_IO;
  
 procedure Fizzbuzz is

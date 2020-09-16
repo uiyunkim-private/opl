@@ -1,3 +1,8 @@
+/*
+This code is from Rosettacode.org
+http://rosettacode.org/wiki/FizzBuzz
+*/
+
 fizzbuzz :-
         foreach(between(1, 100, X), print_item(X)).
  

@@ -1,3 +1,6 @@
+// This code is from Rosettacode.org
+// http://rosettacode.org/wiki/FizzBuzz
+
 package main
  
 import "fmt"

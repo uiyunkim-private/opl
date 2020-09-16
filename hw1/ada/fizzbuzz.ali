@@ -5,7 +5,7 @@ P ZX
 RN
 RV NO_IO
 
-U fizzbuzz%b		fizzbuzz.adb		648cd7a4 NE OO SU
+U fizzbuzz%b		fizzbuzz.adb		880971e4 NE OO SU
 W ada%s			ada.ads			ada.ali
 W ada.text_io%s		a-textio.adb		a-textio.ali
 Z system.img_int%s	s-imgint.adb		s-imgint.ali
@@ -17,7 +17,7 @@ D a-stream.ads		20200819050642 119b8fb3 ada.streams%s
 D a-tags.ads		20200819050643 edddc8f0 ada.tags%s
 D a-textio.ads		20200819050643 aef4d56d ada.text_io%s
 D a-unccon.ads		20200819050643 0e9b276f ada.unchecked_conversion%s
-D fizzbuzz.adb		20200904185915 ca7802c9 fizzbuzz%b
+D fizzbuzz.adb		20200916200154 26fda489 fizzbuzz%b
 D interfac.ads		20200819050644 5ab55268 interfaces%s
 D i-cstrea.ads		20200819050644 e53d8b8e interfaces.c_streams%s
 D system.ads		20200819050647 085b6ffb system%s
@@ -35,13 +35,13 @@ D s-traent.ads		20200819050646 005bf670 system.traceback_entries%s
 D s-unstyp.ads		20200819050646 5ecf7212 system.unsigned_types%s
 D s-wchcon.ads		20200819050646 1b7d22d2 system.wch_con%s
 G a e
-G c Z b b [fizzbuzz standard 3 11 none]
+G c Z b b [fizzbuzz standard 6 11 none]
 X 1 ada.ads
-16K9*Ada 20e8 8|1r6 1r23
+16K9*Ada 20e8 8|4r6 4r23
 X 6 a-textio.ads
-57K13*Text_IO 727e16 8|1w10 1r27
-508U14*Put_Line 8|7s10 9s10 11s10 13s10
+57K13*Text_IO 727e16 8|4w10 4r27
+508U14*Put_Line 8|10s10 12s10 14s10 16s10
 X 8 fizzbuzz.adb
-3U11*Fizzbuzz 3b11 16l5 16t13
-5i8 I{integer} 6r10 8r13 10r13 13r33
+6U11*Fizzbuzz 6b11 19l5 19t13
+8i8 I{integer} 9r10 11r13 13r13 16r33
 
