@@ -15,5 +15,5 @@ d = {                       #Dictionary to save pattern in the order of matching
     '0\d': 'Fizz',          #then this
                             #otherwise it will pass
      }
-for i in range(100):
+for i in range(1,100):
     print(find_matches(i,d, str(i%3)+str(i%5))) #Argument(i, pattern_dict, mod 3, mod5)
