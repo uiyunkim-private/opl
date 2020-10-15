@@ -37,10 +37,12 @@ token scan() {
         else return t_id;
     }
     else if (isdigit(c)) {
+        
         do {
             token_image[i++] = c;
             c = std::cin.get();
         } while (isdigit(c));
+
         token_image[i] = '\0';
 
         return t_literal;

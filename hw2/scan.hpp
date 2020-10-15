@@ -7,6 +7,8 @@
 #include <cstring>
 #include <cctype>
 
+
+
 typedef enum {t_read, t_write, t_id, t_literal, t_gets,
               t_add, t_sub, t_mul, t_div, t_lparen, t_rparen,
                t_eof,t_if,t_while,t_eq,t_neq,t_less,t_great,t_less_eq,

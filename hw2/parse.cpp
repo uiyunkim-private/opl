@@ -9,6 +9,9 @@
 #include <cstdlib>
 #include "scan.hpp"
 
+
+std::string AST;
+
 const std::string names[] = {"read", "write", "id", "literal", "gets",
                        "add", "sub", "mul", "div", "lparen", "rparen", 
                        "eof","if","while"};
@@ -24,12 +27,13 @@ void error () {
 void match (token expected) {
 
     if (input_token == expected) {
+
         std::cout << "matched "<< names[input_token];
 
         if (input_token == t_id || input_token == t_literal)
+
             std::cout << ": " << token_image << std::endl;
 
-        
         input_token = scan ();
     }
     else error ();
@@ -49,10 +53,10 @@ void relational_operator();
 void condition();
 void end();
 
-std::string tab;
+
 
 void program () {
-    
+    AST+= "(program" ;
     switch (input_token) {
         case t_id:
         case t_read:
@@ -60,16 +64,17 @@ void program () {
         case t_while:
         case t_if:
         case t_eof:
-            std::cout << "predict program --> stmt_list eof" << std::endl;
+            //std::cout << "predict program --> stmt_list eof" << std::endl;
             stmt_list ();
             match (t_eof);
             break;
         default: error ();
     }
+    AST+= ")";
 }
 
 void stmt_list () {
-
+    AST+= "[" ;
     switch (input_token) {
         case t_id:
         case t_read:
@@ -88,25 +93,37 @@ void stmt_list () {
             break;          /* epsilon production */
         default: error ();
     }
+    AST+= "]";
 }
 
 void stmt () {
-    
+    AST+= "(";
+    std::string tmp;
     switch (input_token) {
         case t_id:
             std::cout << "predict stmt --> id gets expr" << std::endl;
+            tmp = ":=";
             match (t_id);
+            
+            AST+= tmp + " " + "\""+ std::string(token_image)+ "\" ";
             match (t_gets);
+
+            
             expr ();
             break;
         case t_read:
+            AST+= "read ";
             std::cout << "predict stmt --> read id" << std::endl;
             match (t_read);
+            AST+= "\"" +  std::string(token_image) + "\"";
             match (t_id);
+            
             break;
         case t_write:
+            AST+= "write ";
             std::cout << "predict stmt --> write expr" << std::endl;
             match (t_write);
+
             expr ();
             break;
         case t_if:
@@ -116,30 +133,36 @@ void stmt () {
             stmt_list();
             break;
         case t_while:
+            AST += "(while ";
             std::cout << "predict stmt --> while expr" << std::endl;
             match (t_while);
             condition();
             stmt_list();
+            AST += ")";
             break;
         case t_end:
             match (t_end);
             break;
         default: error ();
     }
+    AST+= ")";
 }
 
 void expr () {
+    AST+= "(";
     switch (input_token) {
         case t_id:
         case t_literal:
 
         case t_lparen:
             std::cout << "predict expr --> term term_tail" << std::endl;
+
             term ();
             term_tail ();
             break;
         default: error ();
     }
+    AST+= ")";
 }
 
 void term () {
@@ -185,13 +208,18 @@ void term_tail () {
 }
 
 void factor () {
+    
     switch (input_token) {
         case t_literal:
             std::cout << "predict factor --> literal" << std::endl;
+            AST += "num ";
+            AST+= "\"" +  std::string(token_image) + "\"";
             match (t_literal);
             break;
         case t_id :
             std::cout << "predict factor --> id" << std::endl;
+            AST += "id ";
+            AST+= "\"" +  std::string(token_image) + "\"";
             match (t_id);
             break;
         case t_lparen:
@@ -239,12 +267,15 @@ void factor_tail () {
 void add_op () {
     switch (input_token) {
         case t_add:
+            
             std::cout << "predict add_op --> add" << std::endl;
             match (t_add);
+            AST += "+";
             break;
         case t_sub:
             std::cout << "predict add_op --> sub" << std::endl;
             match (t_sub);
+            AST += "-";
             break;
         default: error ();
     }
@@ -255,19 +286,24 @@ void mul_op () {
         case t_mul:
             std::cout << "predict mul_op --> mul" << std::endl;
             match (t_mul);
+            AST += "*";
             break;
         case t_div:
             std::cout << "predict mul_op --> div" << std::endl;
             match (t_div);
+            AST += "/";
             break;
         default: error ();
     }
 }
 
 void condition(){
+    AST += "( ";
     expr ();
     relational_operator();
     expr();
+
+    AST += ")";
 }
 
 void end()
@@ -287,27 +323,34 @@ void relational_operator(){
   switch(input_token){
     case t_eq:
         std::cout << "predict ro --> eq" << std::endl;
+        
         match(t_eq);
+        AST += "=";
         break;
     case t_great:
         std::cout << "predict ro --> great" << std::endl;
         match(t_great);
+        AST += ">";
         break;
     case t_great_eq:
         std::cout << "predict ro --> great_eq" << std::endl;
         match(t_great_eq);
+        AST += ">=";
         break;
     case t_neq:
         std::cout << "predict ro --> neq" << std::endl;
         match(t_neq);
+        AST += "<>";
         break;
     case t_less:
         std::cout << "predict ro --> less" << std::endl;
         match(t_less);
+        AST += "<";
         break;
     case t_less_eq:
         std::cout << "predict ro --> less_eq" << std::endl;
         match(t_less_eq);
+        AST += "<=";
         break;
     default: error ();
 
@@ -318,6 +361,9 @@ void relational_operator(){
 int main () {
     input_token = scan ();
     program ();
+    std::cout << std::endl;
+    std::cout <<"***************AST***************" << std::endl;
+    std::cout << AST << std::endl;
     return 0;
 }
 
