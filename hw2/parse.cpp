@@ -10,7 +10,8 @@
 #include "scan.hpp"
 
 const std::string names[] = {"read", "write", "id", "literal", "gets",
-                       "add", "sub", "mul", "div", "lparen", "rparen", "eof"};
+                       "add", "sub", "mul", "div", "lparen", "rparen", 
+                       "eof","if","while"};
 
 static token input_token;
 
@@ -21,12 +22,14 @@ void error () {
 }
 
 void match (token expected) {
+
     if (input_token == expected) {
         std::cout << "matched "<< names[input_token];
 
         if (input_token == t_id || input_token == t_literal)
             std::cout << ": " << token_image << std::endl;
 
+        
         input_token = scan ();
     }
     else error ();
@@ -42,12 +45,20 @@ void factor ();
 void factor_tail ();
 void add_op ();
 void mul_op ();
+void relational_operator();
+void condition();
+void end();
+
+std::string tab;
 
 void program () {
+    
     switch (input_token) {
         case t_id:
         case t_read:
         case t_write:
+        case t_while:
+        case t_if:
         case t_eof:
             std::cout << "predict program --> stmt_list eof" << std::endl;
             stmt_list ();
@@ -58,13 +69,19 @@ void program () {
 }
 
 void stmt_list () {
+
     switch (input_token) {
         case t_id:
         case t_read:
+        case t_while:
+        case t_if:
         case t_write:
             std::cout << "predict stmt_list --> stmt stmt_list" << std::endl;
             stmt ();
             stmt_list ();
+            break;
+        case t_end:
+            match (t_end);
             break;
         case t_eof:
             std::cout << "predict stmt_list --> epsilon" << std::endl;
@@ -74,6 +91,7 @@ void stmt_list () {
 }
 
 void stmt () {
+    
     switch (input_token) {
         case t_id:
             std::cout << "predict stmt --> id gets expr" << std::endl;
@@ -91,6 +109,21 @@ void stmt () {
             match (t_write);
             expr ();
             break;
+        case t_if:
+            std::cout << "predict stmt --> if expr" << std::endl;
+            match (t_if);
+            condition();
+            stmt_list();
+            break;
+        case t_while:
+            std::cout << "predict stmt --> while expr" << std::endl;
+            match (t_while);
+            condition();
+            stmt_list();
+            break;
+        case t_end:
+            match (t_end);
+            break;
         default: error ();
     }
 }
@@ -99,6 +132,7 @@ void expr () {
     switch (input_token) {
         case t_id:
         case t_literal:
+
         case t_lparen:
             std::cout << "predict expr --> term term_tail" << std::endl;
             term ();
@@ -133,6 +167,15 @@ void term_tail () {
         case t_rparen:
         case t_id:
         case t_read:
+        case t_while:
+        case t_if:
+        case t_less_eq:
+        case t_great_eq:
+        case t_great:
+        case t_end:
+        case t_less:
+        case t_eq:
+        case t_neq:
         case t_write:
         case t_eof:
             std::cout << "predict term_tail --> epsilon" << std::endl;
@@ -162,6 +205,7 @@ void factor () {
 }
 
 void factor_tail () {
+    
     switch (input_token) {
         case t_mul:
         case t_div:
@@ -176,6 +220,15 @@ void factor_tail () {
         case t_id:
         case t_read:
         case t_write:
+        case t_while:
+        case t_less_eq:
+        case t_great_eq:
+        case t_great:
+        case t_less:
+        case t_eq:
+        case t_neq:
+        case t_end:
+        case t_if:
         case t_eof:
             std::cout << "predict factor_tail --> epsilon" << std::endl;
             break;          /* epsilon production */
@@ -211,9 +264,60 @@ void mul_op () {
     }
 }
 
+void condition(){
+    expr ();
+    relational_operator();
+    expr();
+}
+
+void end()
+{
+    switch(input_token){
+        case t_end:
+            std::cout << "predict end of condition" << std::endl;
+            match(t_eq);
+            break;
+        default: error ();
+
+    }
+}
+
+void relational_operator(){
+
+  switch(input_token){
+    case t_eq:
+        std::cout << "predict ro --> eq" << std::endl;
+        match(t_eq);
+        break;
+    case t_great:
+        std::cout << "predict ro --> great" << std::endl;
+        match(t_great);
+        break;
+    case t_great_eq:
+        std::cout << "predict ro --> great_eq" << std::endl;
+        match(t_great_eq);
+        break;
+    case t_neq:
+        std::cout << "predict ro --> neq" << std::endl;
+        match(t_neq);
+        break;
+    case t_less:
+        std::cout << "predict ro --> less" << std::endl;
+        match(t_less);
+        break;
+    case t_less_eq:
+        std::cout << "predict ro --> less_eq" << std::endl;
+        match(t_less_eq);
+        break;
+    default: error ();
+
+
+}
+}
+
 int main () {
     input_token = scan ();
-    std::cout << input_token << std::endl;
     program ();
     return 0;
 }
+
