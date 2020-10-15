@@ -1,6 +1,3 @@
-# The code below is from Rosettacode.org
-# http://rosettacode.org/wiki/FizzBuzz
-# for i in range(1,1000000): print("Fizz"*(i%3==0) + "Buzz"*(i%5==0) or i)
 
 # The code below is our own implementation of pattern matching in python
 import re
